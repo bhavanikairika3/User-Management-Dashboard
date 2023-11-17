@@ -3,12 +3,6 @@ import React, { useEffect, useState } from "react";
 import BasicTabs from "./components/Tabs";
 import "./App.css";
 
-var link = document.createElement("link");
-link.href = "App.css";
-link.rel = "stylesheet";
-link.type = "text/css";
-document.head.appendChild(link);
-
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -32,10 +26,12 @@ const RegistrationForm = () => {
       month: "2-digit",
       day: "2-digit",
     });
+
     await axios.post("http://localhost:3001/users", {
       ...formData,
       creation_date: formattedDate,
     });
+
     setFormData({
       username: "",
       email: "",
@@ -44,7 +40,7 @@ const RegistrationForm = () => {
     });
   };
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}className="form">
       <label>
         Username:
         <input
@@ -96,10 +92,28 @@ const RegistrationForm = () => {
 
 const App = () => {
   const [users, setUsers] = useState([]);
-  const [openModal,setOpenModal]=useState(false)
-  const openhandleModal = () => { 
+  const [results, setResults] = useState([]);
+
+  // MODAL OPEN OR CLOSE STATE IS STORED HERE
+  const [openModal, setOpenModal] = useState(false);
+  const [currentState, setCurrentState] = useState(false);
+
+  const handleInput = (value) => {
+    if (value) {
+      const matchingItems = users.filter((item) =>
+        item.username.startsWith(value)
+      );
+      setResults(matchingItems);
+    } else {
+      setResults([]);
+    }
+  };
+  const openhandleModal = (data) => {
+    setCurrentState(data);
+    // WHEN LIST IS CLICKED, WE ARE SETTING IT TO TRUE
     setOpenModal(true);
-  }
+  };
+
   const getUsersList = async () => {
     try {
       const response = await axios.get("http://localhost:3001/users");
@@ -109,26 +123,60 @@ const App = () => {
 
   const User = () => {
     return (
-      <div>
-        <div className="App.css">
-          <span>ID </span>
-          <span>USER NAME </span>
-          <span>EMAIL </span>
-          <span>PHONE </span>
-          <span>CREATION DATE </span>
+      <table>
+        {/* MODAL */}
+        {/* CONDITION FOR MODAL OPEN / CLOSE */}
+        {openModal ? (
+          <div className="modal">
+            <div>
+              <div
+                style={{ cursor: "pointer" }}
+                onClick={() => setOpenModal(false)}
+              >
+                X
+              </div>
+              <div className="head">
+                <span>{currentState.id}</span>
+                <span>{currentState.username}</span>
+                <span>{currentState.email}</span>
+                <span>{currentState.phone}</span>
+                <span>{currentState.creation_date}</span>
+              </div>
+            </div>
+          </div>
+        ) : null}
+        <div className="head">
+          <th>ID </th>
+          <th>USER NAME </th>
+          <th>EMAIL </th>
+          <th>PHONE </th>
+          <th>CREATION DATE </th>
         </div>
         {users.map((curr, i) => {
           return (
-            <div className="App.css" onClick={openhandleModal}>
-              <span>{curr.id}</span>
-              <span>{curr.username}</span>
-              <span>{curr.email}</span>
-              <span>{curr.phone}</span>
-              <span>{curr.creation_date}</span>
+            <div className="head" onClick={() => openhandleModal(curr)}>
+              <td>{curr.id}</td>
+              <td>{curr.username}</td>
+              <td>{curr.email}</td>
+              <td>{curr.phone}</td>
+              <td>{curr.creation_date}</td>
             </div>
           );
         })}
-      </div>
+        <div>
+          {results.map((curr, i) => {
+            return (
+              <div className="head" onClick={() => openhandleModal(curr)}>
+                <span>{curr.id}</span>
+                <span>{curr.username}</span>
+                <span>{curr.email}</span>
+                <span>{curr.phone}</span>
+                <span>{curr.creation_date}</span>
+              </div>
+            );
+          })}
+        </div>
+      </table>
     );
   };
   useEffect(() => {
