@@ -1,0 +1,49 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "users": [
+    {
+      "username": "user1",
+      "email": "user1@example.com",
+      "phone": "+1234567890",
+      "id": "123abc",
+      "creation_date": "2023-01-01"
+    },
+    {
+      "username": "user2",
+      "email": "user2@example.com",
+      "phone": "+9876543210",
+      "id": "456def",
+      "creation_date": "2023-02-15"
+    },
+    {
+      "username": "user3",
+      "email": "user3@example.com",
+      "phone": "+5555555555",
+      "id": "789ghi",
+      "creation_date": "2023-03-20"
+    },
+    {
+      "username": "asa",
+      "email": "karnamsaiteja1999@gmail.com",
+      "phone": "1w1qwsa",
+      "id": "1",
+      "creation_date": "11/16/2023"
+    }
+  ]
+}
